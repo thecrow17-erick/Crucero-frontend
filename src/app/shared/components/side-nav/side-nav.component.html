@@ -1,0 +1,46 @@
+  <div class="example-container " [class.example-is-mobile]="isMobile()">
+    <mat-toolbar class="example-toolbar">
+      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container"
+                          [style.marginTop.px]="isMobile() ? 56 : 0">
+      <mat-sidenav #snav [mode]="isMobile() ? 'over' : 'side'"
+                  [fixedInViewport]="isMobile()" fixedTopGap="56">
+        <mat-nav-list>
+          @for (nav of itemsNav; track nav) {
+            @if (nav.items.length == 0) {
+              <mat-list-item [routerLink]=nav.router (click)="snav.toggle()">
+                <mat-icon matListItemIcon>{{nav.icon}}</mat-icon>
+                {{nav.name}}
+              </mat-list-item>
+            }
+            @else {
+              <div class="p-1">
+                <mat-accordion>
+                  <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header>
+                      <mat-panel-description class="flex justify-start">
+                        <mat-icon>{{nav.icon}}</mat-icon>
+                      </mat-panel-description>
+                      <mat-panel-title> {{nav.name}} </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    @for(item of nav.items;track item){
+                    <mat-list-item [routerLink]=item.router (click)="snav.toggle()" routerLinkActive="active-link" class="flex items-center">
+                        <mat-icon color="red" class="mr-2" matListItemIcon>{{item.icon}}</mat-icon>
+                        <p class="pt-3" >{{item.name}}</p>
+                    </mat-list-item>
+                    }
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            }
+          }
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <router-outlet />
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
