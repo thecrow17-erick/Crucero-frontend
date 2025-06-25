@@ -1,0 +1,131 @@
+<div class="employee-table-container p-6">
+  <!-- Loading Spinner -->
+  @if (isLoading()) {
+    <div class="flex justify-center items-center py-8">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  }
+
+  <!-- Tabla de empleados -->
+  @if (!isLoading() && employees().length > 0) {
+    <div class="mat-elevation-8 rounded-lg overflow-hidden">
+      <table mat-table [dataSource]="employees()" class="w-full">
+
+        <!-- Columna ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef class="font-semibold">
+            <mat-icon class="mr-2">fingerprint</mat-icon>
+            ID
+          </th>
+          <td mat-cell *matCellDef="let employee" class="font-mono text-sm">
+            <span
+              class="bg-gray-100 px-2 py-1 rounded cursor-pointer hover:bg-gray-200 transition-colors"
+              [title]="employee.id"
+              (click)="copyToClipboard(employee.id)">
+              {{ getShortId(employee.id) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Columna Tipo -->
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef class="font-semibold">
+            <mat-icon class="mr-2">category</mat-icon>
+            Tipo
+          </th>
+          <td mat-cell *matCellDef="let employee">
+            <span
+              [class]="employee.tipo === 'ADMIN' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'"
+              class="px-3 py-1 rounded-full text-xs font-medium">
+              {{ employee.tipo }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Columna Nombre -->
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef class="font-semibold">
+            <mat-icon class="mr-2">person</mat-icon>
+            Nombre
+          </th>
+          <td mat-cell *matCellDef="let employee" class="font-medium">
+            {{ employee.usuario.nombre }}
+          </td>
+        </ng-container>
+
+        <!-- Columna Correo -->
+        <ng-container matColumnDef="correo">
+          <th mat-header-cell *matHeaderCellDef class="font-semibold">
+            <mat-icon class="mr-2">email</mat-icon>
+            Correo
+          </th>
+          <td mat-cell *matCellDef="let employee">
+            <a
+              [href]="'mailto:' + employee.usuario.correo"
+              class="text-blue-600 hover:text-blue-800 hover:underline transition-colors">
+              {{ employee.usuario.correo }}
+            </a>
+          </td>
+        </ng-container>
+
+        <!-- Columna Fecha de Creación -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef class="font-semibold">
+            <mat-icon class="mr-2">schedule</mat-icon>
+            Creado
+          </th>
+          <td mat-cell *matCellDef="let employee" class="text-sm text-gray-600">
+            {{ formatDate(employee.createdAt) }}
+          </td>
+        </ng-container>
+
+        <!-- Columna Fecha de Actualización -->
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef class="font-semibold">
+            <mat-icon class="mr-2">update</mat-icon>
+            Actualizado
+          </th>
+          <td mat-cell *matCellDef="let employee" class="text-sm text-gray-600">
+            {{ formatDate(employee.updatedAt) }}
+          </td>
+        </ng-container>
+
+        <!-- Columna Acciones -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="font-semibold">
+            <mat-icon class="mr-2">settings</mat-icon>
+            Acciones
+          </th>
+          <td mat-cell *matCellDef="let employee">
+            <button
+              mat-icon-button
+              (click)="editEmployee(employee)"
+              matTooltip="Editar empleado"
+              class="hover:text-yellow-400 transition-colors">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Header y filas de la tabla -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            class="hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-100"></tr>
+      </table>
+    </div>
+
+    <!-- Footer con información -->
+    <div class="mt-4 text-sm text-gray-500 text-center">
+      Mostrando {{ employees().length }} empleado(s)
+    </div>
+  }
+
+  <!-- Estado vacío -->
+  @if (!isLoading() && employees().length === 0) {
+    <div class="text-center py-12">
+      <mat-icon class="text-gray-400 text-6xl mb-4">people_outline</mat-icon>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay empleados registrados</h3>
+      <p class="text-gray-500">Cuando se registren empleados, aparecerán aquí.</p>
+    </div>
+  }
+</div>

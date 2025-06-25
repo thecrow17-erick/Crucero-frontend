@@ -1,0 +1,81 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Crear Nuevo Bus</h1>
+        <p class="mt-2 text-gray-600">Registra un nuevo bus en el sistema</p>
+      </div>
+      
+      <!-- Botón para volver -->
+      <button 
+        mat-stroked-button
+        class="px-6 py-2">
+        <mat-icon class="mr-2">arrow_back</mat-icon>
+        Volver a Buses
+      </button>
+    </div>
+
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+            <mat-icon class="w-4 h-4 mr-2">home</mat-icon>
+            Inicio
+          </a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <mat-icon class="w-4 h-4 text-gray-400">chevron_right</mat-icon>
+            <a href="#" class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2">Buses</a>
+          </div>
+        </li>
+        <li aria-current="page">
+          <div class="flex items-center">
+            <mat-icon class="w-4 h-4 text-gray-400">chevron_right</mat-icon>
+            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Crear Bus</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Formulario de creación -->
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <div class="text-center mb-8">
+        <div class="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+          <mat-icon class="text-blue-600 text-3xl">directions_bus</mat-icon>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">Información del Bus</h2>
+        <p class="text-gray-600 mt-2">Completa todos los campos requeridos para registrar el bus</p>
+      </div>
+
+      <!-- Componente del formulario -->
+      <div class="max-w-2xl mx-auto">
+        <app-buses-create-form></app-buses-create-form>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="mt-8 bg-blue-50 rounded-lg p-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <mat-icon class="text-blue-400">info</mat-icon>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800">
+            Información importante
+          </h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <ul class="list-disc list-inside space-y-1">
+              <li>La placa debe seguir el formato ABC-123 (3 letras, guión, 3 números)</li>
+              <li>Cada bus debe tener un conductor asignado</li>
+              <li>El color seleccionado será usado para identificar el bus en el mapa</li>
+              <li>Una vez creado, el bus estará disponible para asignar rutas</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

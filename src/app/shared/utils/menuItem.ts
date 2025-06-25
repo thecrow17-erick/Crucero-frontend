@@ -20,4 +20,23 @@ export const menuItem: IMenuNav[] =[
       }
     ]
   },
+  {
+    name: "Buses",
+    icon: "directions_bus",
+    router: "/dashboard/buses",
+    items: [
+      {
+        name: "Todos los Buses",
+        icon: "list",
+        router: "/dashboard/buses",
+        items: []
+      },
+      {
+        icon: "add_circle",
+        name: "Crear Bus",
+        router: "/dashboard/buses/create",
+        items: []
+      }
+    ]
+  }
 ]

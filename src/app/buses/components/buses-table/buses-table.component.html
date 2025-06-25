@@ -1,0 +1,128 @@
+<div class="w-full">
+  <!-- Loading state -->
+  <div *ngIf="isLoading()" class="flex justify-center items-center p-8">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <!-- Table container -->
+  <div *ngIf="!isLoading()" class="w-full overflow-x-auto bg-white rounded-lg shadow">
+    <table mat-table [dataSource]="buses()" class="w-full">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">ID</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm">
+          <div class="flex items-center space-x-2">
+            <span class="font-mono text-xs text-gray-600">{{ getShortId(bus.id) }}</span>
+            <button
+              mat-icon-button
+              matTooltip="Copiar ID completo"
+              (click)="copyToClipboard(bus.id)"
+              class="text-gray-400 hover:text-blue-500 transition-colors"
+              size="small">
+              <mat-icon class="text-sm">content_copy</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Color Column -->
+      <ng-container matColumnDef="color">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">Color</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm">
+          <div class="flex items-center space-x-2">
+            <div
+              class="w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
+              [style.background-color]="bus.color">
+            </div>
+            <span class="font-mono text-xs text-gray-600">{{ bus.color }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Placa Column -->
+      <ng-container matColumnDef="placa">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">Placa</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm">
+          <span class="font-semibold text-gray-900">{{ bus.placa }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Estado Column -->
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">Estado</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm">
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+            [ngClass]="getEstadoClass(bus.estado)">
+            <span class="w-1.5 h-1.5 rounded-full mr-1.5"
+                  [ngClass]="bus.estado ? 'bg-green-400' : 'bg-red-400'">
+            </span>
+            {{ getEstadoText(bus.estado) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- ID Empleado Column -->
+      <ng-container matColumnDef="id_empleado">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">ID Empleado</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm">
+          <div class="flex items-center space-x-2">
+            <span class="font-mono text-xs text-gray-600">{{ getShortId(bus.id_empleado) }}</span>
+            <button
+              mat-icon-button
+              matTooltip="Copiar ID de empleado"
+              (click)="copyToClipboard(bus.id_empleado)"
+              class="text-gray-400 hover:text-blue-500 transition-colors"
+              size="small">
+              <mat-icon class="text-sm">content_copy</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Created At Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">Creado</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm text-gray-600">
+          {{ formatDate(bus.createdAt) }}
+        </td>
+      </ng-container>
+
+      <!-- Updated At Column -->
+      <ng-container matColumnDef="updatedAt">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">Actualizado</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm text-gray-600">
+          {{ formatDate(bus.updatedAt) }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">Acciones</th>
+        <td mat-cell *matCellDef="let bus" class="text-sm">
+          <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Editar bus"
+            (click)="editBus(bus)"
+            class="hover:bg-blue-50 transition-colors">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Header and Row Definitions -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          class="hover:bg-gray-50 transition-colors cursor-pointer"></tr>
+    </table>
+
+    <!-- Empty state -->
+    <div *ngIf="buses().length === 0" class="text-center py-12">
+      <mat-icon class="text-gray-400 text-6xl mb-4">directions_bus</mat-icon>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay buses registrados</h3>
+      <p class="text-gray-500">Comienza agregando tu primer bus al sistema.</p>
+    </div>
+  </div>
+</div>

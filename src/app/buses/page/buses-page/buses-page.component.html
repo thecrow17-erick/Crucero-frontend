@@ -1,0 +1,25 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Todos los Buses</h1>
+        <p class="mt-2 text-gray-600">Gestiona y visualiza la flota completa de buses</p>
+      </div>
+      <div class="mt-4 sm:mt-0">
+        <button
+          mat-raised-button
+          color="primary"
+          class="px-6 py-3">
+          <mat-icon class="mr-2">add</mat-icon>
+          Crear Bus
+        </button>
+      </div>
+    </div>
+
+    <!-- Buses Table Container -->
+    <div class="bg-white rounded-lg shadow">
+      <app-buses-table></app-buses-table>
+    </div>
+  </div>
+</div>

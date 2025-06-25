@@ -1,0 +1,212 @@
+<mat-stepper linear #stepper>
+  <!-- First page -->
+  <mat-step [stepControl]="firstFormGroup" >
+    <form [formGroup]="firstFormGroup" (ngSubmit)="onSubmitForm1()" class="bg-white rounded-md shadow-2xl p-5">
+      <ng-template matStepLabel>Entidad</ng-template>
+      <h1 class="text-gray-800 font-bold text-2xl mb-1">BITBUS</h1>
+      <p class="text-sm font-normal text-gray-600 mb-8">Crear Entidad</p>
+      <div class="flex items-center mb-4 py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Nombre de la entidad</mat-label>
+          <input formControlName="name" matInput class="pl-2 w-full outline-none border-none" type="text" placeholder="Linea 79 Heroes del chaco" required/>
+          <mat-icon matSuffix>person</mat-icon>
+
+          <mat-error *ngIf="firstFormGroup.get('name')?.hasError('minlength') && firstFormGroup.get('name')?.touched">
+            Mínimo 5 caracteres
+          </mat-error>
+          <mat-error *ngIf="firstFormGroup.get('name')?.hasError('required') && firstFormGroup.get('name')?.touched">
+            Este campo es obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="flex items-center py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="type" matNativeControl required>
+            <mat-option value="PRIVADA">Privada</mat-option>
+            <mat-option value="PÚBLICA">Publica</mat-option>
+            <mat-error *ngIf="firstFormGroup.get('type')?.hasError('required') && firstFormGroup.get('type')?.touched">
+              Este campo es obligatorio
+            </mat-error>
+
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="flex items-center py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Email de contacto</mat-label>
+          <input formControlName="email" matInput class="pl-2 w-full outline-none border-none" type="email" placeholder="example@example.com" required/>
+            <mat-error *ngIf="firstFormGroup.get('email')?.hasError('required') && firstFormGroup.get('email')?.touched">
+              Este campo es obligatorio
+            </mat-error>
+            <mat-error *ngIf="firstFormGroup.get('email')?.hasError('email') && firstFormGroup.get('email')?.touched">
+              Que sea un email válido
+            </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="flex items-center py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Wallet url</mat-label>
+          <input formControlName="wallet" matInput class="pl-2 w-full outline-none border-none" type="text" placeholder="direccion wallet"  required/>
+            <mat-error *ngIf="firstFormGroup.get('wallet')?.hasError('required') && firstFormGroup.get('wallet')?.touched">
+              Este campo es obligatorio
+            </mat-error>
+            <mat-error *ngIf="firstFormGroup.get('wallet')?.hasError('minlength') && firstFormGroup.get('wallet')?.touched">
+              Mínimo 3 caracteres
+            </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex items-center py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Divisa</mat-label>
+          <mat-select formControlName="divisa" matNativeControl required>
+            <mat-option *ngFor="let divisa of divisas()" [value]="divisa.id">{{divisa.pais}} - {{divisa.simbolo}}</mat-option>
+            <mat-error *ngIf="firstFormGroup.get('divisa')?.hasError('required') && firstFormGroup.get('divisa')?.touched">
+              Este campo es obligatorio
+            </mat-error>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="flex items-center py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Direccion</mat-label>
+          <input formControlName="address" matInput class="pl-2 w-full outline-none border-none" type="text" placeholder="Direccion" required/>
+          <mat-icon matSuffix>location_on</mat-icon>
+            <mat-error *ngIf="firstFormGroup.get('address')?.hasError('required') && firstFormGroup.get('address')?.touched">
+              Este campo es obligatorio
+            </mat-error>
+            <mat-error *ngIf="firstFormGroup.get('address')?.hasError('minlength') && firstFormGroup.get('address')?.touched">
+              Mínimo 5 caracteres
+            </mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <!-- Campos de coordenadas -->
+      <div class="grid grid-cols-2 gap-4 py-2 px-3">
+        <mat-form-field>
+          <mat-label>Latitud</mat-label>
+          <input formControlName="latitude" matInput class="pl-2 w-full outline-none border-none" type="text" placeholder="Latitud" readonly/>
+          <mat-icon matSuffix>place</mat-icon>
+          <mat-error *ngIf="firstFormGroup.get('latitude')?.hasError('required') && firstFormGroup.get('latitude')?.touched">
+            Seleccione ubicación en el mapa
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Longitud</mat-label>
+          <input formControlName="longitude" matInput class="pl-2 w-full outline-none border-none" type="text" placeholder="Longitud" readonly/>
+          <mat-icon matSuffix>place</mat-icon>
+          <mat-error *ngIf="firstFormGroup.get('longitude')?.hasError('required') && firstFormGroup.get('longitude')?.touched">
+            Seleccione ubicación en el mapa
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Google Maps -->
+      <div class="py-2 px-3">
+        <mat-card class="map-container">
+          <mat-card-header>
+            <mat-card-title class="text-sm">Seleccione la ubicación en el mapa</mat-card-title>
+            <mat-card-subtitle class="text-xs">Haga clic en el mapa para establecer las coordenadas</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <google-map
+              id="map"
+              [center]="mapCenter"
+              [zoom]="mapZoom"
+              [options]="mapOptions"
+              height="300px"
+              width="100%"
+              (mapClick)="onMapClick($event)">
+
+              <!-- Marcador para mostrar la ubicación seleccionada -->
+              @if (markerPosition) {
+                <map-marker [position]="markerPosition">
+                </map-marker>
+              }
+            </google-map>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="w-full px-5">
+        <button mat-flat-button class="w-full" [disabled]="isLoad()" matStepperNext>
+          Siguiente
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- Second page -->
+  <mat-step [stepControl]="secondFormGroup" >
+    <form [formGroup]="secondFormGroup" (ngSubmit)="onSubMitForm2()" class="bg-white rounded-md shadow-2xl p-5">
+      <ng-template matStepLabel>Admin</ng-template>
+      <h1 class="text-gray-800 font-bold text-2xl mb-1">BITBUS</h1>
+      <p class="text-sm font-normal text-gray-600 mb-8">Datos del administrador</p>
+      <div class="flex items-center mb-4 py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>email del administrador</mat-label>
+          <input formControlName="email" matInput class="pl-2 w-full outline-none border-none" type="email" placeholder="example@gmail.com" required/>
+          <mat-icon matSuffix>email</mat-icon>
+
+          <mat-error *ngIf="secondFormGroup.get('email')?.hasError('minlength') && secondFormGroup.get('email')?.touched">
+            Mínimo 3 caracteres
+          </mat-error>
+          <mat-error *ngIf="secondFormGroup.get('email')?.hasError('email') && secondFormGroup.get('email')?.touched">
+              Este campo es obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex items-center mb-4 py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Nombre</mat-label>
+          <input formControlName="name" matInput class="pl-2 w-full outline-none border-none" type="text" placeholder="admin" required/>
+          <mat-icon matSuffix>person</mat-icon>
+
+          <mat-error *ngIf="secondFormGroup.get('name')?.hasError('minlength') && secondFormGroup.get('name')?.touched">
+            Mínimo 5 caracteres
+          </mat-error>
+          <mat-error *ngIf="secondFormGroup.get('name')?.hasError('required') && secondFormGroup.get('name')?.touched">
+            Este campo es obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="flex items-center py-2 px-3">
+        <mat-form-field class="w-full">
+          <mat-label>Contraseña</mat-label>
+          <input formControlName="password" matInput class="pl-2 w-full outline-none border-none" [type]="is_pass()? 'text' : 'password'"  placeholder="********" />
+          <button matSuffix mat-icon-button type="button" aria-label="Clear" (click)="isViewPass()">
+            @if (!is_pass()) {
+              <mat-icon>visibility</mat-icon>
+            }@else{
+              <mat-icon>visibility_off</mat-icon>
+            }
+          </button>
+          <mat-error *ngIf="secondFormGroup.get('password')?.hasError('required') && secondFormGroup.get('password')?.touched">
+            Este campo es obligatorio
+          </mat-error>
+          <mat-error *ngIf="secondFormGroup.get('password')?.hasError('minlength') && secondFormGroup.get('password')?.touched">
+            Mínimo 3 caracteres
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="flex justify-end py-2 px-3">
+        <button mat-button matStepperPrevious type="button">Atras</button>
+        <button mat-flat-button matStepperNext class="px-3" [disabled]="this.isLoad()" >Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Listo</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button [routerLink]="['/auth/sign-in']" mat-button matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+</mat-stepper>
+

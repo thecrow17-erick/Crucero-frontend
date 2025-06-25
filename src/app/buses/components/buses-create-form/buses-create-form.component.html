@@ -1,0 +1,127 @@
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+
+
+  <form [formGroup]="busForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+    <!-- Título del formulario -->
+    <div class="text-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">Crear Nuevo Bus</h2>
+      <p class="text-gray-600 mt-2">Completa la información del bus</p>
+    </div>
+
+    <!-- Campo Placa -->
+    <div class="w-full">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Placa del Bus</mat-label>
+        <input
+          matInput
+          formControlName="placa"
+          placeholder="ABC-123"
+          maxlength="7"
+          class="uppercase">
+        <mat-icon matSuffix>directions_bus</mat-icon>
+
+        <!-- Errores de validación -->
+        <mat-error *ngIf="placa?.hasError('required') && placa?.touched">
+          La placa es requerida
+        </mat-error>
+        <mat-error *ngIf="placa?.hasError('pattern') && placa?.touched">
+          Formato inválido. Ejemplo: ABC-123
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Campo Color -->
+    <div class="w-full">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Color del Bus</mat-label>
+        <input
+          matInput
+          type="color"
+          formControlName="color"
+          class="h-12 cursor-pointer">
+        <mat-icon matSuffix>palette</mat-icon>
+
+        <!-- Preview del color seleccionado -->
+        <div class="flex items-center mt-2">
+          <div
+            class="w-6 h-6 rounded-full border-2 border-gray-300 mr-2"
+            [style.background-color]="color?.value">
+          </div>
+          <span class="text-sm text-gray-600 font-mono">{{ color?.value }}</span>
+        </div>
+
+        <mat-error *ngIf="color?.hasError('required') && color?.touched">
+          Selecciona un color
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Campo Empleado -->
+    <div class="w-full">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Conductor Asignado</mat-label>
+        <mat-select formControlName="id_empleado">
+          <mat-option value="">
+            <em>Seleccionar empleado</em>
+          </mat-option>
+          <mat-option
+            *ngFor="let employee of allEmployees()"
+            [value]="employee.id">
+            <div class="flex flex-col">
+              <span class="font-medium">{{ employee.usuario.nombre }}</span>
+              <span class="text-sm text-gray-500">{{ employee.usuario.correo }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>person</mat-icon>
+
+        <mat-error *ngIf="id_empleado?.hasError('required') && id_empleado?.touched">
+          Selecciona un conductor
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex flex-col space-y-3 pt-6">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="isLoading()"
+        class="w-full h-12 text-base font-medium">
+
+        <span *ngIf="!isLoading()" class="flex items-center justify-center">
+          <mat-icon class="mr-2">add</mat-icon>
+          Crear Bus
+        </span>
+
+        <span *ngIf="isLoading()" class="flex items-center justify-center">
+          <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+          Creando...
+        </span>
+      </button>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="busForm.reset(); busForm.patchValue({ color: '#000000' })"
+        [disabled]="isLoading()"
+        class="w-full h-12 text-base">
+        <mat-icon class="mr-2">refresh</mat-icon>
+        Limpiar Formulario
+      </button>
+    </div>
+
+    <!-- Estado del formulario (para debugging) -->
+    <div *ngIf="busForm.dirty" class="mt-6 p-4 bg-gray-50 rounded-lg">
+      <h4 class="text-sm font-medium text-gray-700 mb-2">Estado del formulario:</h4>
+      <div class="text-xs text-gray-600 space-y-1">
+        <p><strong>Válido:</strong> {{ busForm.valid ? 'Sí' : 'No' }}</p>
+        <p><strong>Modificado:</strong> {{ busForm.dirty ? 'Sí' : 'No' }}</p>
+        <p><strong>Valores:</strong></p>
+        <pre class="text-xs bg-white p-2 rounded border">{{ busForm.value | json }}</pre>
+      </div>
+    </div>
+  </form>
+</div>
